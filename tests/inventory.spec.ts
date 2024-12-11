@@ -1,7 +1,5 @@
 import { test, chromium, expect } from '@playwright/test';
 import { AcceptedUsernames, LoginPageObject } from '../pages/login/LoginPageObject';
-import { AccountPage } from '../pages/account/AccountPage';
-import { CategoriesPage } from '../pages/categories/categories';
 import { InventoryPage } from '../pages/inventory/InventoryPage';
 
 
