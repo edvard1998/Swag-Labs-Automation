@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { AcceptedUsernames, LoginPageObject } from '../pages/login/LoginPageObject';
-import { InventoryPage } from '../pages/inventory/InventoryPage';
-import { CardView } from '../pages/card/CardView';
+import { InventoryPage } from '../pages/inventory/InventoryListPage';
+import { CardView } from '../pages/inventory/InventoryViewPage';
 
 
 test('Login', async ({ page }) => {
