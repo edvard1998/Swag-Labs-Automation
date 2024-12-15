@@ -1,12 +1,12 @@
-import { test, chromium, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { AcceptedUsernames, LoginPageObject } from '../pages/login/LoginPageObject';
 import { InventoryPage } from '../pages/inventory/InventoryPage';
+import { CardView } from '../pages/card/CardView';
 
 
 test('Login', async ({ page }) => {
   await test.step('login', async () => {
     const password = 'secret_sauce';
-
     const loginPage = new LoginPageObject(page);
 
     await loginPage.goto();
@@ -16,5 +16,21 @@ test('Login', async ({ page }) => {
   await test.step('go to inventory page', async () => {
     const inventoryPage = new InventoryPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);
+    
+    const inventoryList = await inventoryPage.getInventoryList();    
+
+    for (let inventory = 0; inventory < inventoryList.length; inventory++) {
+      const inventoryItem = inventoryList[inventory];
+      await page.waitForSelector(`//div[@class="inventory_item"][${inventory + 1}]/div[@class="inventory_item_img"]`);
+      await inventoryItem.product.click();      
+
+      const cardView = new CardView(page, inventoryItem.data.inventoryId);
+      await expect(page).toHaveURL(cardView.pageUrl);
+      const inventoryDescription = await cardView.getInventoryDescriptionData();
+      expect(inventoryItem.data.textContent).toBe(inventoryDescription);
+      await cardView.goBack();
+
+      await expect(page).toHaveURL(inventoryPage.pageUrl);
+    }
   });
 });
