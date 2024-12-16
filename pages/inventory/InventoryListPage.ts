@@ -1,5 +1,5 @@
 import { Locator, Page } from "@playwright/test";
-import { PageObject } from "../PageObject";
+import { InventoryPage } from "./InventoryPage";
 
 export interface Inventory {
     product: Locator,
@@ -9,7 +9,7 @@ export interface Inventory {
     }
 }
 
-export class InventoryPage extends PageObject {
+export class InventoryListPage extends InventoryPage {
     private readonly cardList: Locator;
     
     constructor(page: Page) {
