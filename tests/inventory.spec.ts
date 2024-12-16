@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { AcceptedUsernames, LoginPageObject } from '../pages/login/LoginPageObject';
-import { InventoryPage } from '../pages/inventory/InventoryListPage';
+import { InventoryListPage } from '../pages/inventory/InventoryListPage';
 import { IventoryViewPage } from '../pages/inventory/InventoryViewPage';
 
 
@@ -14,7 +14,7 @@ test('Login', async ({ page }) => {
   });
 
   await test.step('go to inventory page', async () => {
-    const inventoryPage = new InventoryPage(page);
+    const inventoryPage = new InventoryListPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);
     
     const inventoryList = await inventoryPage.getInventoryList();    
