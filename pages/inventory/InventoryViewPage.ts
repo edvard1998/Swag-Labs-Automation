@@ -1,7 +1,7 @@
 import { Locator, Page, expect } from "@playwright/test";
 import { InventoryPage } from "./InventoryPage";
 
-export class IventoryViewPage extends InventoryPage {
+export class InventoryViewPage extends InventoryPage {
     private readonly backButton: Locator;
     private readonly inventoryDetails: Locator;
     

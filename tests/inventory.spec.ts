@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { AcceptedUsernames, LoginPageObject } from '../pages/login/LoginPageObject';
 import { InventoryListPage } from '../pages/inventory/InventoryListPage';
-import { IventoryViewPage } from '../pages/inventory/InventoryViewPage';
+import { InventoryViewPage } from '../pages/inventory/InventoryViewPage';
 
 
 test('Login', async ({ page }) => {
@@ -24,12 +24,15 @@ test('Login', async ({ page }) => {
       await page.waitForSelector(`//div[@class="inventory_item"][${inventory + 1}]/div[@class="inventory_item_img"]`);
       await inventoryItem.product.click();      
 
-      const iventoryViewPage = new IventoryViewPage(page, inventoryItem.data.inventoryId);
-      await expect(page).toHaveURL(iventoryViewPage.pageUrl);
-      const inventoryDescription = await iventoryViewPage.getInventoryDescriptionData();
+      const inventoryViewPage = new InventoryViewPage(page, inventoryItem.data.inventoryId);
+      await expect(page).toHaveURL(inventoryViewPage.pageUrl);
+      const inventoryDescription = await inventoryViewPage.getInventoryDescriptionData();
       expect(inventoryItem.data.textContent).toBe(inventoryDescription);
-      await iventoryViewPage.addToCard();
-      await iventoryViewPage.goBack();
+      await inventoryViewPage.addToCard();
+
+      await inventoryViewPage.remove();
+
+      await inventoryViewPage.goBack();
 
       await expect(page).toHaveURL(inventoryPage.pageUrl);
     }
