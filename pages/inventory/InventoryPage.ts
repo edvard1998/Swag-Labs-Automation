@@ -5,6 +5,7 @@ export class InventoryPage extends PageObject {
     private readonly shoppingCardIcon: Locator;
     private readonly shoppingCardBadge: Locator;
     private readonly addToCardButton: Locator;
+    private productCount: number;
 
     constructor(page: Page, pageUrl: string) {
         super(page, pageUrl);
@@ -19,18 +20,19 @@ export class InventoryPage extends PageObject {
         await this.addToCardButton.click();
         await expect(this.shoppingCardBadge).toBeVisible();
         await expect(this.addToCardButton).toContainText('REMOVE');
+
+        this.productCount = Number(await this.shoppingCardBadge.textContent());
     }
 
     async remove() {
+        this.productCount--;
         await expect(this.addToCardButton).toBeVisible();
         await this.addToCardButton.click();
+        let btnInventory = 'REMOVE';
 
-        const productCount = Number(await this.shoppingCardBadge.textContent());
-        let btnInventory = 'ADD TO CART';
-
-        if (productCount < 2) {
+        if (this.productCount < 2) {
             await expect(this.shoppingCardBadge).not.toBeVisible();
-            btnInventory = 'REMOVE';
+            btnInventory = 'ADD TO CART';
         } else {
             await expect(this.shoppingCardBadge).toBeVisible();
         }
