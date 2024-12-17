@@ -13,7 +13,7 @@ test('Login', async ({ page }) => {
     await loginPage.login(AcceptedUsernames.STANDARD_USER, password);
   });
 
-  await test.step('go to inventory page', async () => {
+  await test.step('Go to inventory page and add the product to the shopping card', async () => {
     const inventoryPage = new InventoryListPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);
     
@@ -29,7 +29,6 @@ test('Login', async ({ page }) => {
       const inventoryDescription = await inventoryViewPage.getInventoryDescriptionData();
       expect(inventoryItem.data.textContent).toBe(inventoryDescription);
       await inventoryViewPage.addToCard();
-
       await inventoryViewPage.remove();
 
       await inventoryViewPage.goBack();
