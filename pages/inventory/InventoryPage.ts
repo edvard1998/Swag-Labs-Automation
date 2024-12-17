@@ -39,4 +39,8 @@ export class InventoryPage extends PageObject {
         
         await expect(this.addToCardButton).toContainText(btnInventory);
     }
+
+    async goToBasket() {
+        await this.shoppingCardIcon.click();
+    }
 }
