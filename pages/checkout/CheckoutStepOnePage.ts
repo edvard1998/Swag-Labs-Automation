@@ -30,5 +30,7 @@ export class CheckoutStepOnePage extends PageObject {
     async continue() {
         await expect(this.continueBtn).toBeVisible();
         await this.continueBtn.click();
+
+        await expect(this.page).not.toHaveURL(this.pageUrl)
     }
 }
