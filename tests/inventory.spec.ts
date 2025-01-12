@@ -26,7 +26,7 @@ test('Swag Labs', async ({ page }) => {
   });
 
   // Temporary skipping
-  await test.skip('Go to inventory page and add the product to the shopping card', async () => {
+  await test.skip('Go to inventory page and add the product to the shopping card then check out', async () => {
     const inventoryPage = new InventoryListPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);
 
