@@ -6,7 +6,17 @@ import { Card } from '../pages/card/card';
 import { CheckoutStepOnePage } from '../pages/checkout/CheckoutStepOnePage';
 import { CheckoutStepTwoPage } from '../pages/checkout/CheckoutSteTwoPage';
 
-test('Login', async ({ page }) => {
+interface SortingStype {
+  Ascending: string,
+  Descending: string
+}
+
+const sotringType: SortingStype = {
+  Ascending: 'ASC',
+  Descending: 'DESC'
+}
+
+test('Swag Labs', async ({ page }) => {
   await test.step('login', async () => {
     const password = 'secret_sauce';
     const loginPage = new LoginPageObject(page);
@@ -18,7 +28,7 @@ test('Login', async ({ page }) => {
   await test.step('Go to inventory page and add the product to the shopping card', async () => {
     const inventoryPage = new InventoryListPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);
-    
+
     const inventoryList = await inventoryPage.getInventoryList();    
 
     for (let inventory = 0; inventory < inventoryList.length; inventory++) {
@@ -52,4 +62,19 @@ test('Login', async ({ page }) => {
     await expect(page).toHaveURL(checkoutTwo.pageUrl);
     await checkoutTwo.finish();
   });
+
+  await test.step('Verify products are sorted by name (A-Z) or (Z-A)', async () => {
+
+    const inventoryPage = new InventoryListPage(page);
+    await expect(page).toHaveURL(inventoryPage.pageUrl);
+  
+    let isSortedAlphabetically: boolean;
+  
+    isSortedAlphabetically = await inventoryPage.sortingByName(sotringType.Descending);
+    expect(isSortedAlphabetically).toBe(true);
+
+    isSortedAlphabetically = await inventoryPage.sortingByName(sotringType.Ascending);
+    expect(isSortedAlphabetically).toBe(true);
+  });
+
 });
