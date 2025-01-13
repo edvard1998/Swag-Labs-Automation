@@ -6,7 +6,7 @@ import { Card } from '../pages/card/card';
 import { CheckoutStepOnePage } from '../pages/checkout/CheckoutStepOnePage';
 import { CheckoutStepTwoPage } from '../pages/checkout/CheckoutSteTwoPage';
 
-test('Login', async ({ page }) => {
+test('Swag Labs', async ({ page }) => {
   await test.step('login', async () => {
     const password = 'secret_sauce';
     const loginPage = new LoginPageObject(page);
@@ -15,10 +15,10 @@ test('Login', async ({ page }) => {
     await loginPage.login(AcceptedUsernames.STANDARD_USER, password);
   });
 
-  await test.step('Go to inventory page and add the product to the shopping card', async () => {
+  await test.step('Go to inventory page and add the product to the shopping card then check out', async () => {
     const inventoryPage = new InventoryListPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);
-    
+
     const inventoryList = await inventoryPage.getInventoryList();    
 
     for (let inventory = 0; inventory < inventoryList.length; inventory++) {
