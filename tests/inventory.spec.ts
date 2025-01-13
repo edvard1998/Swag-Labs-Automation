@@ -15,7 +15,6 @@ test('Swag Labs', async ({ page }) => {
     await loginPage.login(AcceptedUsernames.STANDARD_USER, password);
   });
 
-  // Temporary skipping
   await test.step('Go to inventory page and add the product to the shopping card then check out', async () => {
     const inventoryPage = new InventoryListPage(page);
     await expect(page).toHaveURL(inventoryPage.pageUrl);

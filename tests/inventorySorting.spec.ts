@@ -1,5 +1,6 @@
 import test, { expect } from "@playwright/test";
 import { InventoryListPage } from "../pages/inventory/InventoryListPage";
+import { LoginPageObject, AcceptedUsernames } from "../pages/login/LoginPageObject";
 
 interface SortingStype {
   Ascending: string,
@@ -12,8 +13,15 @@ const sotringType: SortingStype = {
 }
 
 test('Inventory sorting', async ({page}) => {
-    await test.step('Verify products are sorted by name (A-Z) or (Z-A)', async () => {
+  await test.step('login', async () => {
+    const password = 'secret_sauce';
+    const loginPage = new LoginPageObject(page);
 
+    await loginPage.goto();
+    await loginPage.login(AcceptedUsernames.STANDARD_USER, password);
+  });
+
+    await test.step('Verify products are sorted by name (A-Z) or (Z-A)', async () => {
         const inventoryPage = new InventoryListPage(page);
         await expect(page).toHaveURL(inventoryPage.pageUrl);
       
