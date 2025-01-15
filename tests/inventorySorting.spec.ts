@@ -4,12 +4,16 @@ import { LoginPageObject, AcceptedUsernames } from "../pages/login/LoginPageObje
 
 interface SortingStype {
   Ascending: string,
-  Descending: string
+  Descending: string,
+  PriceLowToHigh: string,
+  PriceHighToLow: string
 }
 
 const sotringType: SortingStype = {
-  Ascending: 'ASC',
-  Descending: 'DESC'
+  Ascending: 'Name (A to Z)',
+  Descending: 'Name (Z to A)',
+  PriceLowToHigh: 'Price (low to high)',
+  PriceHighToLow: 'Price (high to low)'
 }
 
 test('Inventory sorting', async ({page}) => {
@@ -21,16 +25,22 @@ test('Inventory sorting', async ({page}) => {
     await loginPage.login(AcceptedUsernames.STANDARD_USER, password);
   });
 
-    await test.step('Verify products are sorted by name (A-Z) or (Z-A)', async () => {
-        const inventoryPage = new InventoryListPage(page);
-        await expect(page).toHaveURL(inventoryPage.pageUrl);
-      
-        let isSortedAlphabetically: boolean;
-      
-        isSortedAlphabetically = await inventoryPage.sortingByName(sotringType.Descending);
-        expect(isSortedAlphabetically).toBe(true);
+  await test.step('Verify products are sorted', async () => {
+      const inventoryPage = new InventoryListPage(page);
+      await expect(page).toHaveURL(inventoryPage.pageUrl);
     
-        isSortedAlphabetically = await inventoryPage.sortingByName(sotringType.Ascending);
-        expect(isSortedAlphabetically).toBe(true);
-      });
+      let isSortedAlphabetically: boolean;
+    
+      isSortedAlphabetically = await inventoryPage.sort(sotringType.Descending);
+      expect(isSortedAlphabetically).toBe(true);
+  
+      isSortedAlphabetically = await inventoryPage.sort(sotringType.Ascending);
+      expect(isSortedAlphabetically).toBe(true);
+
+      isSortedAlphabetically = await inventoryPage.sort(sotringType.PriceHighToLow);
+      expect(isSortedAlphabetically).toBe(true);
+  
+      isSortedAlphabetically = await inventoryPage.sort(sotringType.PriceLowToHigh);
+      expect(isSortedAlphabetically).toBe(true);
+  });
 });

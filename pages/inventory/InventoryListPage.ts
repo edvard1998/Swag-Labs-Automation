@@ -45,30 +45,48 @@ export class InventoryListPage extends InventoryPage {
         }
 
         return linkedList;
-    }
+    }   
 
-    async getInventoryItemName(): Promise<string[]> {
-        const productNameList: string[] = [];
+    private async getInventoryItemData(): Promise<{ name: string, price: number }[]> {
+        const productDataList: { name: string, price: number }[] = [];
 
         const productList = await this.page.$$('//div[@class="inventory_item"]');
 
         for (let index = 0; index < productList.length; index++) {
-            const productItem = this.page.locator(`//div[@class="inventory_item"][${index + 1}]/div[@class="inventory_item_label"]/a/div`);
+            const productName = await productList[index].$('.inventory_item_label > a > div');
+            const name = await productName?.evaluate(val => {
+                return val.textContent; 
+            });
 
-            const innerText = await productItem.textContent();
-            productNameList.push(innerText ?? '');   
+            const productPrice = await productList[index].$('.pricebar > div');
+            const price = await productPrice?.evaluate(val => {
+                return val.textContent?.substring(1); 
+            });
+
+            productDataList.push({name: name ?? '', price: parseFloat(price ?? '0.00') });
         }
         
-        return productNameList;
-        
-    } 
+        return productDataList;
+    }
+
     
-    async sortingByName(order: string): Promise<boolean> {
-        await this.productSortContainer.selectOption((order == 'ASC' && 'Name (A to Z)') || 'Name (Z to A)');
+    async sort(order: string): Promise<boolean> {
+        await this.productSortContainer.selectOption(order);
 
-        const productNames = await this.getInventoryItemName();
-        const isSortedAlphabetically = productNames.every((val, i, arr) => order == 'ASC' ? !i || arr[i - 1].localeCompare(val) <= 0 : !i || arr[i - 1].localeCompare(val) > 0 );
+        const productData = await this.getInventoryItemData();
+        const isSorted = productData.every((val, i, arr) => {
+            switch(order) {
+                case 'Name (A to Z)':
+                    return !i || arr[i - 1].name.localeCompare(val.name) <= 0;
+                case 'Name (Z to A)':
+                    return !i || arr[i - 1].name.localeCompare(val.name) > 0;
+                case 'Price (low to high)':
+                    return !i || arr[i - 1].price <= val.price;
+                case 'Price (high to low)':
+                    return !i || arr[i - 1].price >= val.price;
+            }
+        });
 
-        return isSortedAlphabetically
+        return isSorted;
     }
 }
